@@ -17,10 +17,6 @@ db.connect((err) => {
   console.log('Connected to the MySQL database.');
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 app.get('/pokemon', (req, res) => {
   const sql = 'SELECT * FROM pkmn_info';
   db.query(sql, (err, results) => {
