@@ -4,29 +4,29 @@ import { SearchIcon } from "@chakra-ui/icons";
 export default function Home() {
   return (
     <Flex
-      height="100vh"
+      height="60vh"
       align="center"
       justify="center"
       bg="gray.50"
       px={4}
     >
-      <VStack spacing={6}>
+      <VStack spacing={0}>
         {/* Pokébyte Logo */}
         <Image
           src="/pokebyte-logo.png"
           alt="Pokébyte Logo"
-          boxSize="200px"
+          boxSize="600px"
           objectFit="contain"
         />
 
         {/* Rounded Search Bar */}
-        <InputGroup maxW="400px" boxShadow="md">
+        <InputGroup maxW="600px" boxShadow="md">
           <InputLeftElement pointerEvents="none">
             <Icon as={SearchIcon} color="gray.400" />
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Search Pokemon..."
+            placeholder="Search City..."
             borderRadius="full"
             bg="white"
             _placeholder={{ color: "gray.500" }}
