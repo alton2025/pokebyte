@@ -6,10 +6,7 @@ export default function RootLayout() {
   return (
     <Box
       minH="100vh"
-      bgImage="url('/pokebyte-wallpaper.jpg')"
-      bgSize="cover"
-      bgRepeat="no-repeat"
-      bgPosition="center"
+      bg="#9DC7EC"
       >
       <Outlet />
     </Box>
