@@ -2,8 +2,11 @@ import { Box, Input, InputGroup, InputLeftElement, Icon, Flex, VStack, Image} fr
 import { SearchIcon } from "@chakra-ui/icons";
 import {Menu, MenuButton, MenuList, MenuItem, Button, InputRightElement} from "@chakra-ui/react";
 import { ChevronDownIcon} from "@chakra-ui/icons";
+import React, { useState } from "react";
 
 export default function Home() {
+  const [selectedFilter, setSelectedFilter] = useState("Season");
+
   return (
     <Flex
       height="60vh"
@@ -11,7 +14,7 @@ export default function Home() {
       justify="center"
       px={4}
     >
-      <VStack spacing={0}>
+      <VStack spacing={4}>
         {/* Pokébyte Logo */}
         <Image
           src="/pokebyte-logo.png"
@@ -20,7 +23,7 @@ export default function Home() {
           objectFit="contain"
         />
 
-        {/* Rounded Search Bar */}
+        {/* Rounded Search Bar with Dropdown Filter */}
         <InputGroup maxW="600px" boxShadow="md">
           <InputLeftElement pointerEvents="none">
             <Icon as={SearchIcon} color="gray.400" />
@@ -34,18 +37,19 @@ export default function Home() {
             _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
           />
 
+          {/* Right Addon Dropdown Menu */}
           <InputRightElement width="auto" pr="2">
             <Menu>
-              <MenuButton as ={Button} size="sm" rightIcon={<ChevronDownIcon />}>
-                Seasons
+              <MenuButton as={Button} size="sm" rightIcon={<ChevronDownIcon />}>
+                {selectedFilter}
               </MenuButton>
               <MenuList>
-                <MenuItem>Fall</MenuItem>
-                <MenuItem>Winter</MenuItem>
-                <MenuItem>Spring</MenuItem>
-                <MenuItem>Summer</MenuItem>
+                <MenuItem onClick={() => setSelectedFilter("Fall")}>Fall</MenuItem>
+                <MenuItem onClick={() => setSelectedFilter("Winter")}>Winter</MenuItem>
+                <MenuItem onClick={() => setSelectedFilter("Spring")}>Spring</MenuItem>
+                <MenuItem onClick={() => setSelectedFilter("Summer")}>Summer</MenuItem>
               </MenuList>
-          </Menu>
+            </Menu>
           </InputRightElement>
         </InputGroup>
       </VStack>
