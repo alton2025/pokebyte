@@ -1,11 +1,9 @@
-import { Box, Input, InputGroup, InputLeftElement, Icon, Flex, VStack, Image} from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
-import {Menu, MenuButton, MenuList, MenuItem, Button, InputRightElement} from "@chakra-ui/react";
-import { ChevronDownIcon} from "@chakra-ui/icons";
+import {Flex, VStack, Image} from "@chakra-ui/react";
+import {useNavigate} from
 import React, { useState } from "react";
 
 export default function Home() {
-  const [selectedFilter, setSelectedFilter] = useState("Season");
+  const navigate = useNavigate();
 
   return (
     <Flex
