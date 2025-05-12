@@ -1,53 +1,30 @@
-import { Box, Input, InputGroup, InputLeftElement, Icon, Flex, VStack, Image} from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
-import {Menu, MenuButton, MenuList, MenuItem, Button, InputRightElement} from "@chakra-ui/react";
-import { ChevronDownIcon} from "@chakra-ui/icons";
+import {Flex, VStack, Image} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
+import React from "react";
+import SearchBar from "../components/SearchBar.jsx";
+
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleSearch = (city, season) => {
+    navigate(`/Result?city=${city}&season=${season}`);
+  };
+
   return (
-    <Flex
-      height="60vh"
-      align="center"
-      justify="center"
-      px={4}
-    >
+    <Flex height="60vh" align="center" justify="center" px={4}>
       <VStack spacing={0}>
-        {/* Pokébyte Logo */}
+        {/* Pokebyte Logo */}
         <Image
           src="/pokebyte-logo.png"
           alt="Pokébyte Logo"
           boxSize="600px"
           objectFit="contain"
+          mb ={0}
         />
 
-        {/* Rounded Search Bar */}
-        <InputGroup maxW="600px" boxShadow="md">
-          <InputLeftElement pointerEvents="none">
-            <Icon as={SearchIcon} color="gray.400" />
-          </InputLeftElement>
-          <Input
-            type="text"
-            placeholder="Search City or Park..."
-            borderRadius="full"
-            bg="white"
-            _placeholder={{ color: "gray.500" }}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-          />
-          {/* Dropdown Menu  */}
-          <InputRightElement width="auto" pr="2">
-            <Menu>
-              <MenuButton as ={Button} size="sm" rightIcon={<ChevronDownIcon />}>
-                Seasons
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Fall</MenuItem>
-                <MenuItem>Winter</MenuItem>
-                <MenuItem>Spring</MenuItem>
-                <MenuItem>Summer</MenuItem>
-              </MenuList>
-          </Menu>
-          </InputRightElement>
-        </InputGroup>
+        {/* Search bar below logo */}
+        <SearchBar onSearch={handleSearch} />
       </VStack>
     </Flex>
   );
