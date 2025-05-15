@@ -1,55 +1,117 @@
-import {Box, VStack, HStack, Text, Heading, Container} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
-export default function  ResultPage() {
-  const mockResults = [{ name: "Pokémon #1", type: "Fire", match: "Sunny" },
-    { name: "Pokémon #2", type: "Water", match: "Rainy" },
-    { name: "Pokémon #3", type: "Grass", match: "Cloudy" },
-  ];
-  return (<Container maxW="5xl" py={10}>
-      <VStack spacing={8} align="stretch">
-        {/* Title */}
-        <Heading textAlign="center">Pokémon Spawn Results</Heading>
+export default function Result() {
+  const [searchParams] = useSearchParams();
+  const city = searchParams.get("city");
+  const season = searchParams.get("season");
 
-        {/* City Info */}
-        <Box p={6} borderWidth="1px" borderRadius="lg" bg="gray.50" shadow="md">
-          <Text><strong>City:</strong> Seattle</Text>
-          <Text><strong>Region:</strong> Washington</Text>
-          <Text><strong>Season Average Temp:</strong> 54°</Text>
-          <Text><strong>Weather Conditions:</strong> Rainy, Cloudy</Text>
-        </Box>
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-        {/* Spawn Cards */}
-        <Heading size="lg">Likely Pokémon Spawns:</Heading>
-        <VStack spacing={4}>
-          {mockResults.map((pokemon, index) => (
-            <Box key={index} borderWidth="1px" borderRadius="lg" p={4} bg="white" shadow="sm" w="full">
-              <HStack spacing={6}>
-                {/* Placeholder for Image */}
-                <Box 
-                  w="100px" 
-                  h="100px" 
-                  bg="gray.100" 
-                  borderRadius="md" 
-                  display="flex" 
-                  alignItems="center" 
-                  justifyContent="center"
-                  fontWeight="bold"
-                  color="gray.600"
-                >
-                  Image
-                </Box>
+  useEffect(() => {
+    if (!city || !season) return;
 
-                {/* Pokémon Info */}
-                <VStack align="start" spacing={1}>
-                  <Text fontSize="xl" fontWeight="bold">{pokemon.name}</Text>
-                  <Text>Type: {pokemon.type}</Text>
-                  <Text>Condition Match: {pokemon.match}</Text>
-                </VStack>
-              </HStack>
+    setLoading(true);
+    setError("");
+    setData([]);
+
+    fetch(`http://localhost:3000/weather?city=${city}&season=${season}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("No data found for that city and season.");
+        return res.json();
+      })
+      .then((json) => {
+        setData(json);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [city, season]);
+
+  if (!city || !season) {
+    return (
+      <Flex height="100vh" align="center" justify="center">
+        <Text fontSize="xl" color="red.500">
+          Please provide both city and season in the search.
+        </Text>
+      </Flex>
+    );
+  }
+
+  return (
+    <Flex direction="column" align="center" p={6} bg="#9DC7EC" minH="100vh">
+      <Heading mb={6} size="lg" color="blue.800">
+        Pokémon Weather Results for {city} ({season})
+      </Heading>
+
+      {loading && <Spinner size="xl" />}
+
+      {error && (
+        <Text color="red.600" fontSize="md" mb={4}>
+          {error}
+        </Text>
+      )}
+
+      {!loading && !error && data.length === 0 && (
+        <Text fontSize="md" color="gray.700">
+          No Pokémon data found.
+        </Text>
+      )}
+
+      <VStack spacing={4} w="100%" maxW="800px" overflowY="auto">
+        {data.map((entry) => (
+          <Box
+            key={entry.PokemonName}
+            p={4}
+            bg="white"
+            rounded="md"
+            shadow="md"
+            w="100%"
+            display="flex"
+            alignItems="center"
+          >
+            <Image
+              src={entry.Image}
+              alt={entry.PokemonName}
+              boxSize="80px"
+              objectFit="contain"
+              mr={4}
+              fallbackSrc="/placeholder-pokemon.png"
+            />
+            <Box>
+              <Text fontWeight="bold" fontSize="lg">
+                {entry.PokemonName}
+              </Text>
+              <Text>
+                <strong>Type 1:</strong> {entry.Type1}{" "}
+                {entry.Type2 && (
+                  <>
+                    <strong>Type 2:</strong> {entry.Type2}
+                  </>
+                )}
+              </Text>
+              <Text>
+                <strong>Region:</strong> {entry.Region} |{" "}
+                <strong>Season Temp Range:</strong> {entry.Season_Temp_Range}°F
+              </Text>
+              <Text>
+                <strong>Weather Conditions:</strong> {entry.WeatherConditions}
+              </Text>
             </Box>
-          ))}
-        </VStack>
+          </Box>
+        ))}
       </VStack>
-    </Container>
+    </Flex>
   );
 }
+
